@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright © 2010 Piotr Ożarowski <piotr@debian.org>
+# Copyright © 2010-2012 Piotr Ożarowski <piotr@debian.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ from debpython.pydist import parse_pydep, guess_dependency
 from debpython.version import DEFAULT, SUPPORTED, debsorted, vrepr, vrange_str
 
 # minimum version required for pycompile/pyclean
-MINPYCDEP = 'python (>= 2.7.1-0ubuntu2)'
+MINPYCDEP = 'python:any (>= 2.6.6-7~)'
 
 log = logging.getLogger(__name__)
 
@@ -94,11 +94,13 @@ class Dependencies(object):
             tpl = 'python-dbg' if dbgpkg else 'python'
             minv = pub_vers[0]
             maxv = pub_vers[-1]
-            if dbgpkg:
-                tpl2 = 'python%d.%d-dbg'
-            else:
-                tpl2 = 'python%d.%d'
-            self.depend(' | '.join(tpl2 % i for i in debsorted(pub_vers)))
+            # generating "python2.X | python2.Y | python2.Z" dependencies
+            # disabled (see #625740):
+            #if dbgpkg:
+            #    tpl2 = 'python%d.%d-dbg'
+            #else:
+            #    tpl2 = 'python%d.%d'
+            #self.depend(' | '.join(tpl2 % i for i in debsorted(pub_vers)))
 
             # additional Depends to block python package transitions
             if minv <= DEFAULT:
@@ -112,25 +114,21 @@ class Dependencies(object):
         if stats['compile']:
             self.depend(MINPYCDEP)
 
-        if not options.ignore_shebangs:
-            for interpreter, version in stats['shebangs']:
-                self.depend(interpreter)
+        for interpreter, version in stats['shebangs']:
+            self.depend("%s:any" % interpreter)
 
         for private_dir, details in stats['private_dirs'].iteritems():
-            if options.ignore_shebangs:
-                versions = []
-            else:
-                versions = list(v for i, v in details.get('shebangs', []) if v)
+            versions = list(v for i, v in details.get('shebangs', []) if v)
 
             for v in versions:
                 if v in SUPPORTED:
-                    self.depend("python%d.%d" % v)
+                    self.depend("python%d.%d:any" % v)
                 else:
-                    log.warn('dependency on python%s (from shebang) ignored'
+                    log.info('dependency on python%s (from shebang) ignored'
                              ' - it\'s not supported anymore', vrepr(v))
             # /usr/bin/python shebang → add python to Depends
             if any(True for i, v in details.get('shebangs', []) if v is None):
-                self.depend('python')
+                self.depend('python:any')
 
             if details.get('compile', False):
                 self.depend(MINPYCDEP)
@@ -143,13 +141,16 @@ class Dependencies(object):
                     # are scripts for different Python versions: compile with
                     # default Python version (or the one requested via X-P-V)
                     args += "-V %s" % vrange_str(vr)
-                    if vr[0] == vr[1]:
-                        self.depend("python%s" % vrepr(vr[0]))
+                    if vr == (None, None):
+                        pass
+                    elif vr[0] == vr[1]:
+                        self.depend("python%s:any" % vrepr(vr[0]))
                     else:
                         if vr[0]:  # minimum version specified
-                            self.depend("python (>= %s)" % vrepr(vr[0]))
+                            self.depend("python:any (>= %s)" % vrepr(vr[0]))
                         if vr[1]:  # maximum version specified
-                            self.depend("python (<< %s)" % vrepr(vr[1] + 1))
+                            self.depend("python:any (<< %d.%d)" % \
+                                       (vr[1][0], vr[1][1] + 1))
 
                 for pattern in options.regexpr or []:
                     args += " -X '%s'" % pattern.replace("'", r"'\''")

@@ -12,7 +12,7 @@ update-alternatives --remove python /usr/bin/python2.2 || true
 
 case "$1" in
     upgrade)
-        if dpkg --compare-versions $2 lt 2.6.1-0ubuntu1; then
+        if dpkg --compare-versions $2 lt 2.6.1-1~; then
 	    oldv=$(echo $2 | sed 's/^\(...\).*/\1/')
 	    if [ "$DEBIAN_FRONTEND" != noninteractive ]; then
 		echo "running python pre-rtupdate hooks for @PVER@..."
@@ -47,9 +47,9 @@ case "$1" in
 	    echo "$version" > /var/lib/python/python2.6_already_installed
 	fi
 
-	# 2.6.6-4 is the first version, which adds python2.7 as supported
+	# 2.6.6-13 is now the first version, which adds python2.7 as supported
 	# version; need to run an rtinstall python2.7 in the postinst.
-        if dpkg --compare-versions $2 lt 2.6.6-4 && [ -x /usr/bin/python2.7 ]; then
+        if dpkg --compare-versions $2 lt 2.6.6-13 && [ -x /usr/bin/python2.7 ]; then
 	    version=$(dpkg -s python2.7-minimal | awk '/^Version:/ {print $2}')
 	    mkdir -p /var/lib/python
 	    echo "$version" > /var/lib/python/python2.7_already_installed

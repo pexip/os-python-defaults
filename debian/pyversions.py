@@ -110,7 +110,9 @@ def unsupported_versions(version_only=False):
     else:
         return _unsupported_versions
 
-_supported_versions = None
+_supported_versions = ["python%s" % ver.strip() for ver in
+                       os.environ.get('DEBPYTHON_SUPPORTED', '').split(',')
+                       if ver.strip()]
 def supported_versions(version_only=False):
     global _supported_versions
     if not _supported_versions:
@@ -144,7 +146,9 @@ def supported_versions(version_only=False):
     else:
         return _supported_versions
 
-_default_version = None
+_default_version = "python%s" % os.environ.get('DEBPYTHON_DEFAULT', '')
+if _default_version == 'python':
+    _default_version = None
 def default_version(version_only=False):
     global _default_version
     if not _default_version:
@@ -261,12 +265,12 @@ def extract_pyversion_attribute(fn, pkg):
             section = 'Source'
         elif line.startswith('Package: ' + pkg):
             section = pkg
-        elif line.startswith('XS-Python-Version:') or line.startswith('X-Python-Version:'):
+        elif line.lower().startswith(('xs-python-version:', 'x-python-version:')):
             if section != 'Source':
                 raise ValueError, \
                       'attribute X(S)-Python-Version not in Source section'
             sversion = line.split(':', 1)[1].strip()
-        elif line.startswith('XB-Python-Version:'):
+        elif line.lower().startswith('xb-python-version:'):
             if section == pkg:
                 version = line.split(':', 1)[1].strip()
     if section == None:
@@ -274,11 +278,11 @@ def extract_pyversion_attribute(fn, pkg):
     if pkg == 'Source':
         if sversion == None:
             raise MissingVersionValueError, \
-                  'missing X(S)-Python-Version in control file'
+                  'no X(S)-Python-Version in control file'
         return sversion
     if version == None:
         raise MissingVersionValueError, \
-              'missing XB-Python-Version for package `%s' % pkg
+              'no XB-Python-Version for package `%s' % pkg
     return version
 
 # compatibility functions to parse debian/pyversions

@@ -1,8 +1,7 @@
 #! /usr/bin/python
-# -*- coding: utf-8 -*-
-# vim: et ts=4 sw=4
-
-# Copyright © 2010-2011 Piotr Ożarowski <piotr@debian.org>
+# -*- coding: utf-8 -*- vim: et ts=4 sw=4
+#
+# Copyright © 2010-2012 Piotr Ożarowski <piotr@debian.org>
 # Copyright © 2010 Canonical Ltd
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -132,7 +131,7 @@ def py_compile(version, optimize, workers):
     if not isinstance(version, basestring):
         version = vrepr(version)
     cmd = "/usr/bin/python%s%s -m py_compile -" \
-        % (version, '' if (__debug__ or not optimize) else ' -O')
+        % (version, ' -O' if optimize else '')
     process = Popen(cmd, bufsize=1, shell=True,
                     stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     workers[version] = process  # keep the reference for .communicate()
@@ -153,7 +152,7 @@ def compile(files, versions, force, optimize, e_patterns=None):
 
     # byte compile files
     for fn, versions_to_compile in filter_files(files, e_patterns, versions):
-        cfn = fn + 'c' if (__debug__ or not optimize) else 'o'
+        cfn = fn + 'o' if optimize else 'c'
         if not exists(fn):
             # pycentral's hook should clean it later
             if islink(fn):

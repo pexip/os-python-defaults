@@ -16,7 +16,8 @@ install-dev:
 		$(DESTDIR)$(PREFIX)/share/perl5/Debian/Debhelper/Sequence/
 	$(INSTALL) -m 755 runtime.d/* $(DESTDIR)$(PREFIX)/share/python/runtime.d/
 	$(INSTALL) -m 644 autoscripts/* $(DESTDIR)$(PREFIX)/share/debhelper/autoscripts/
-	$(INSTALL) -m 755 dh_python2 $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) -m 755 dh_python2 $(DESTDIR)$(PREFIX)/share/python/
+	$(INSTALL) -m 755 dh_python2.py $(DESTDIR)$(PREFIX)/bin/dh_python2
 	$(INSTALL) -m 644 python2.pm $(DESTDIR)$(PREFIX)/share/perl5/Debian/Debhelper/Sequence/
 
 install-runtime:
@@ -30,13 +31,16 @@ install: install-dev install-runtime
 %.1: %.rst
 	rst2man $< > $@
 
+%.html: %.rst
+	rst2html $< > $@
+
 manpages: $(MANPAGES)
 
 dist_fallback:
 	make -C pydist $@
 
 check_versions:
-	@set -ex;\
+	@set -e;\
 	DEFAULT=`sed -rn 's,^DEFAULT = \(([0-9]+)\, ([0-9]+)\),\1.\2,p' debpython/version.py`;\
 	SUPPORTED=`sed -rn 's,^SUPPORTED = \[\(([0-9]+)\, ([0-9]+)\)\, \(([0-9]+)\, ([0-9]+)\)\],\1.\2 \3.\4,p' debpython/version.py`;\
 	DEB_DEFAULT=`sed -rn 's,^default-version = python([0-9.]*),\1,p' debian/debian_defaults`;\
@@ -52,9 +56,6 @@ pdebuild:
 # TESTS
 nose:
 	nosetests --with-doctest --with-coverage
-
-unittests:
-	python2.7 -m unittest discover -v
 
 tests: nose
 	make -C tests

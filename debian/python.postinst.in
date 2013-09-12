@@ -40,7 +40,7 @@ case "$1" in
 	fi
 
 	# run the rtinstall script, when 2.7 became a supported version
-        if [ -x /usr/bin/python2.7 ] && [ -n "$2" ] && dpkg --compare-versions $2 lt 2.6.6-4; then
+        if [ -x /usr/bin/python2.7 ] && [ -n "$2" ] && dpkg --compare-versions $2 lt 2.6.6-13; then
             if [ "$DEBIAN_FRONTEND" != noninteractive ]; then
 		echo "Linking and byte-compiling packages for runtime python2.7..."
             fi
@@ -51,7 +51,7 @@ case "$1" in
             done
 	fi
 
-        if [ -n "$2" ] && dpkg --compare-versions $2 lt 2.7.1-0ubuntu1~; then
+        if [ -n "$2" ] && dpkg --compare-versions $2 lt 2.7.2-7~; then
 	    oldv=$(echo $2 | sed 's/^\(...\).*/\1/')
 	    if [ "$DEBIAN_FRONTEND" != noninteractive ]; then
 		echo "running python rtupdate hooks for @PVER@..."
