@@ -1,3 +1,9 @@
+python-defaults (2.7.3-0ubuntu2.2pexip1) pexip; urgency=low
+
+  * Prepare Pexip packaging
+
+ -- John-Mark Bell <jmb@pexip.com>  Thu, 26 Dec 2013 23:08:50 +0000
+
 python-defaults (2.7.3-0ubuntu2.2) precise-proposed; urgency=low
 
   * Fix the python-dev Replaces to prevent installation regression.
