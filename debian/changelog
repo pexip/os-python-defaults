@@ -1,3 +1,57 @@
+python-defaults (2.7.13-2) unstable; urgency=medium
+
+  [ Matthias Klose ]
+  * Lower priority of packages from standard to optional.
+
+  [ Scott Kitterman ]
+  * Make another attempt at Django specific binary naming
+
+ -- Matthias Klose <doko@debian.org>  Tue, 24 Jan 2017 14:00:42 +0100
+
+python-defaults (2.7.13-1) unstable; urgency=medium
+
+  [ Matthias Klose ]
+  * Bump version to 2.7.13.
+  * Mark python-doc as M-A: foreign.
+  * Bump debhelper version.
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: Annotate python build dependencies with :any (Closes: #841682)
+
+  [ Chris Lamb ]
+  * Consistently order python substvars to support reproducibility (Closes:
+    #844111)
+
+  [ Scott Kitterman ]
+  * Add Django specific binary naming policy to align to current practice.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 20 Dec 2016 11:15:12 +0100
+
+python-defaults (2.7.11-2) unstable; urgency=medium
+
+  [ Scott Kitterman ]
+  * Python policy updates for Stretch (Many thanks to Ben Finney for all the
+    updates)
+    - Change focus in text to python3
+    - Remove/deprecate features no longer needed due to only a single Python 2
+      version
+    - Discuss update process in more detail
+    - Revamp tools section to better align to current practice
+
+  [ Matthias Klose ]
+  * Update valgrind suppression file. Issue #12612. LP: #1512622.
+  * Rebuild to pick up the GNU triplet change on i386 archs. Addresses: #826128.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 03 Jun 2016 01:29:55 +0200
+
+python-defaults (2.7.11-1) unstable; urgency=medium
+
+  * Bump version to 2.7.11.
+  * Stop shipping menu files.
+  * Fix some lintian warnings.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 09 Dec 2015 13:07:35 +0100
+
 python-defaults (2.7.9-1) unstable; urgency=medium
 
   * Bump version to 2.7.9.
