@@ -3,10 +3,13 @@ Section: python
 Priority: optional
 Maintainer: Pexip AS <packaging@pexip.com>
 XSBC-Pexip-Original-Maintainer: Matthias Klose <doko@debian.org>
-XSBC-Pexip-Original-Uploaders: Scott Kitterman <scott@kitterman.com>, Piotr Ożarowski <piotr@debian.org>
-Build-Depends: debhelper (>= 8~), python-docutils (>= 0.4-3),
-  libhtml-tree-perl, debiandoc-sgml, lsb-release
-Standards-Version: 3.9.4
+XSBC-Pexip-Original-Uploaders: Scott Kitterman <scott@kitterman.com>, Piotr Ożarowski <piotr@debian.org>, Barry Warsaw <barry@debian.org>
+Build-Depends: debhelper (>= 8~), @bd_i586@,
+  lsb-release,
+  python-all,
+  @PVER@ (>= @PREVVER@),
+  debiandoc-sgml,
+Standards-Version: 3.9.6
 Homepage: http://www.python.org/
 Vcs-Bzr: http://alioth.debian.org/anonscm/bzr/pkg-python/python-defaults-debian
 Vcs-Browser: http://alioth.debian.org/scm/loggerhead/pkg-python/python-defaults-debian/files
@@ -16,10 +19,11 @@ Package: python
 Architecture: any
 Multi-Arch: allowed
 Priority: standard
-Depends: ${misc:Depends}, @PVER@ (>= @PREVVER@), python-minimal (= ${binary:Version}), libpython-stdlib (= ${binary:Version})
+Pre-Depends: python-minimal (= ${binary:Version})
+Depends: ${misc:Depends}, @PVER@ (>= @PREVVER@), libpython-stdlib (= ${binary:Version})
 Suggests: python-doc (= ${binary:Version}), python-tk (>= @PREVVER@)
 Conflicts: python-central (<< 0.5.5)
-Breaks: python-csv (<< 1.0-4), python-bz2 (<< 1.1-8), python-email (<< 2.5.5-3), update-manager-core (<< 0.200.5-2)
+Breaks: update-manager-core (<< 0.200.5-2)
 Replaces: python-dev (<< 2.6.5-2)
 Provides: python-email, python-ctypes, python-wsgiref, python-importlib, python-profiler
 Description: interactive high-level object-oriented language (default version)

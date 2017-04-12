@@ -1,3 +1,90 @@
+python-defaults (2.7.9-1pexip1) pexip; urgency=low
+
+  * New upstream release
+
+ -- John-Mark Bell <jmb@pexip.com>  Wed, 11 Apr 2017 01:37:49 +0100
+
+python-defaults (2.7.9-1) unstable; urgency=medium
+
+  * Bump version to 2.7.9.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 16 Mar 2015 23:32:04 +0100
+
+python-defaults (2.7.8-4) unstable; urgency=medium
+
+  [ Barry Warsaw ]
+  * Update policy document to clarify the purpose and use of the wheel
+    files.  No actual change in policy is made.
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 02 Mar 2015 15:45:19 -0500
+
+python-defaults (2.7.8-3) unstable; urgency=medium
+
+  [ Michael Gilbert ]
+  * Make python-minimal a pre-dependency for python (closes: #769106).
+
+ -- Scott Kitterman <scott@kitterman.com>  Mon, 02 Feb 2015 16:12:38 -0500
+
+python-defaults (2.7.8-2) unstable; urgency=medium
+
+  [ Matthias Klose ]
+  * Build-depend on python2.7 and dpkg-dev versions to consistently
+    generate the i586-* symlinks. Closes: #758301.
+
+  [ Piotr Ożarowski ]
+  * dh_python2: add a warning abount missing dh-python in Build-Depends
+
+  [ Scott Kitterman ]
+  * Minor updates to python policy
+    - Reflect disuse of pyshared directory in favor of /usr/lib/python2.7/
+      dist-packages since python2.7 is the last and only python version
+      supported (Closes: #763451)
+    - Update python-central information to reflect its removal from Jessie
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 24 Oct 2014 10:58:42 -0400
+
+python-defaults (2.7.8-1) unstable; urgency=medium
+
+  [ Barry Warsaw ]
+  * Fix typo in policy doc re: wheel package exception list.
+  * Add myself to Uploaders.
+
+  [ Scott Kitterman ]
+  * Fix error in pydist package relationship regex (Closes: #735163)
+    - Thanks to Rafael Laboissiere for the patch
+  * Switch from using lsb-release to dpkg-vendor to determine distro and drop
+    lsb-release from build-depends (Closes: #751706)
+    - Thanks to Peter Pentchev for the patch
+  * Drop unused build-depends on libhtml-tree-perl
+  * Clarify discussion of requirement to use python:Provides (Closes: #669346)
+  * Add clarification of naming requirements for submocules (Closes: #701192)
+  * Minor cleanups in debian/pyversions.py
+  * Stop automatically regenerating static content (dh_python2 man pages and
+    Python FAQ) and drop build-dep on python-docutils to ease bootstrapping
+    (Closes: #754060)
+    - Add direct build-dep on python-all to replace indirect build-dep
+  * Bump version to 2.7.8
+  * Drop ancient Breaks on python-csv, python-bz2, and python-email
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 11 Jul 2014 17:10:37 -0400
+
+python-defaults (2.7.6-2) unstable; urgency=medium
+
+  [ Barry Warsaw ]
+  * Add python policy for Python Wheels.
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 21 May 2014 00:04:16 -0400
+
+python-defaults (2.7.6-1) unstable; urgency=medium
+
+  * Bump version to 2.7.6.
+  * dh_python2: no longer move files to /usr/share/pyshared, don't create
+    /usr/lib/pyshared symlinks for extensions.
+  * Use UTF-8 encoding for the python policy in HTML format. Closes: #689931.
+  * Add a chapter for the python policy to prefer Python 3 over Python 2.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 12 May 2014 12:16:34 +0200
+
 python-defaults (2.7.5-5pexip2) pexip; urgency=low
 
   * Respin package

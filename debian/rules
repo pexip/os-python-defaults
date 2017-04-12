@@ -8,13 +8,15 @@ export SHELL = /bin/bash
 
 DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_MULTIARCH := $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+DEB_HOST_GNU_TYPE := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 
 changelog_values := $(shell dpkg-parsechangelog \
 			| awk '/^(Version|Source):/ {print $$2}')
 PKGSOURCE  := $(word 1, $(changelog_values))
 PKGVERSION := $(word 2, $(changelog_values))
 
-distribution := $(shell lsb_release -is)
+distribution := $(shell dpkg-vendor --query Vendor)
+distrelease  := $(shell lsb_release -cs)
 
 export VER=2.7
 export NVER=2.8
@@ -22,10 +24,15 @@ export PVER=python2.7
 
 PREVVER	:= $(shell awk '/^python/ && NR > 1 {print substr($$2,2,length($$2)-2); exit}' debian/changelog)
 # first version with Multi-Arch: allowed
-PREVVER := 2.7.5-1~
+PREVVER := 2.7.9-1~
 
 # not yet allowed
 ma_allowed	= yes
+
+ifeq (,$(filter $(distrelease),lenny etch squeeze wheezy lucid maverick natty oneiric precise quantal raring saucy trusty))
+  bd_i586 = dpkg-dev (>= 1.17.11), python2.7 (>= 2.7.8-5)
+endif
+
 
 PWD		:= $(shell pwd)
 
@@ -50,10 +57,10 @@ stamp-build:
 stamp-doc-policy:
 	debiandoc2text debian/python-policy.sgml
 	mv -f python-policy.txt debian/
-	debiandoc2html debian/python-policy.sgml
+	debiandoc2html -l en.UTF-8 debian/python-policy.sgml
 	rm -rf debian/python-policy.html
 	mv -f python-policy.html debian/
-	make -C pydist README.PyDist.html
+	make -C pydist
 	touch stamp-doc-policy
 
 stamp-doc: stamp-doc-policy
@@ -64,6 +71,7 @@ control-file:
 	    -e "s/@NVER@/$(NVER)/g" \
 	    -e "s/@VER@/$(VER)/g" \
 	    -e "s/@PREVVER@/$(PREVVER)/g" \
+	    -e "s/@bd_i586@/$(bd_i586)/g" \
 		<debian/control.in \
 	    $(if $(ma_allowed),,| grep -v '^Multi-Arch: allowed$$') \
 		>debian/control.tmp
@@ -81,6 +89,7 @@ endif
 
 faqs = index general programming library extending windows gui installed
 get-faq:
+	# Note: This rule is broken due to web site reorg at python.org
 	rm -rf faq
 	mkdir faq
 	cd faq && \
@@ -95,6 +104,27 @@ get-faq:
 	) >> faq/FAQ.ht
 	rm -f faq/index.ht
 
+make-faq:
+	set -e; \
+	cd faq && \
+	for p in *.ht; do \
+	  p=`basename $$p .ht`; \
+	  echo $(rst2html) $$p.ht $$p.html; \
+	  awk 'NR > 2' $$p.ht > $$p.ht2; \
+	  $(rst2html) $$p.ht2 $$p.html; \
+	  rm -f $$p.ht2; \
+	done
+
+MANPAGES ?= dh_python2.1 pycompile.1 pyclean.1
+
+%.1: %.rst
+	rst2man $< > $@
+
+# Manually run this rule if there is a need to update the dh_python2 man pages
+make-man: $(MANPAGES)
+	cd pydist && \
+	rst2html README.PyDist > README.PyDist.html
+
 clean: control-file
 	dh_testdir
 	dh_testroot
@@ -103,7 +133,6 @@ clean: control-file
 
 	rm -f debian/python-policy.txt
 	rm -rf debian/python-policy.html
-	rm -f faq/*.h2 faq/*.html
 
 	set -e;\
 	for f in debian/*.in; do \
@@ -141,11 +170,7 @@ stamp-install: stamp-build control-file stamp-control
 	cd faq && \
 	for p in *.ht; do \
 	  p=`basename $$p .ht`; \
-	  echo $(rst2html) $$p.ht $$p.html; \
-	  awk 'NR > 2' $$p.ht > $$p.ht2; \
-	  $(rst2html) $$p.ht2 $$p.html; \
 	  mv $$p.html ../debian/python/usr/share/doc/python/faq/; \
-	  rm -f $$p.ht2; \
 	done
 	mv debian/python/usr/share/doc/python/faq/FAQ.html \
 		debian/python/usr/share/doc/python/
@@ -158,7 +183,7 @@ stamp-dh_python:
 	dh_installdirs
 	-make check_versions
 	DESTDIR=debian/python PREFIX=/usr make install-dev
-	DESTDIR=debian/python-minimal PREFIX=/usr make install-runtime manpages
+	DESTDIR=debian/python-minimal PREFIX=/usr make install-runtime
 	# disabled by default, run manually if you want to update it
 	# (requires apt-file and network connection)
 	#make -C pydist dist_fallback
