@@ -4,12 +4,12 @@ Priority: optional
 Maintainer: Pexip AS <packaging@pexip.com>
 XSBC-Pexip-Original-Maintainer: Matthias Klose <doko@debian.org>
 XSBC-Pexip-Original-Uploaders: Scott Kitterman <scott@kitterman.com>, Piotr Ożarowski <piotr@debian.org>, Barry Warsaw <barry@debian.org>
-Build-Depends: debhelper (>= 8~), @bd_i586@,
+Build-Depends: debhelper (>= 9~), @bd_i586@,
   lsb-release,
-  python-all,
-  @PVER@ (>= @PREVVER@),
+  python-all:any,
+  @PVER@:any (>= @PREVVER@),
   debiandoc-sgml,
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Homepage: http://www.python.org/
 Vcs-Bzr: http://alioth.debian.org/anonscm/bzr/pkg-python/python-defaults-debian
 Vcs-Browser: http://alioth.debian.org/scm/loggerhead/pkg-python/python-defaults-debian/files
@@ -18,7 +18,7 @@ XS-Pexip-Upstream: http://ftp.debian.org/debian/ stretch
 Package: python
 Architecture: any
 Multi-Arch: allowed
-Priority: standard
+Priority: optional
 Pre-Depends: python-minimal (= ${binary:Version})
 Depends: ${misc:Depends}, @PVER@ (>= @PREVVER@), libpython-stdlib (= ${binary:Version})
 Suggests: python-doc (= ${binary:Version}), python-tk (>= @PREVVER@)
@@ -37,7 +37,7 @@ Description: interactive high-level object-oriented language (default version)
 Package: python-minimal
 Architecture: any
 Multi-Arch: allowed
-Priority: standard
+Priority: optional
 Depends: ${misc:Depends}, @PVER@-minimal (>= @PREVVER@), dpkg (>= 1.13.20)
 Recommends: python
 Conflicts: python-central (<< 0.5.5)
@@ -87,6 +87,7 @@ Description: header files and a static library for Python (default)
 Package: libpython-stdlib
 Architecture: any
 Multi-Arch: same
+Priority: optional
 Depends: libpython@VER@-stdlib (>= @PREVVER@), ${misc:Depends}
 Description: interactive high-level object-oriented language (default python version)
  Python, the high-level, interactive object oriented language,
@@ -112,6 +113,7 @@ Description: IDE for Python using Tkinter (default version)
 Package: python-doc
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}, python@VER@-doc (>= @PREVVER@)
 Suggests: python-examples, python (= ${binary:Version})
 Breaks: python (<< 2.3.5)
