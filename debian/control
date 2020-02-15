@@ -12,7 +12,7 @@ Standards-Version: 3.9.8
 Homepage: http://www.python.org/
 Vcs-Bzr: http://alioth.debian.org/anonscm/bzr/pkg-python/python-defaults-debian
 Vcs-Browser: http://alioth.debian.org/scm/loggerhead/pkg-python/python-defaults-debian/files
-XS-Pexip-Upstream: http://ftp.debian.org/debian/ stretch
+XS-Pexip-Upstream: http://ftp.debian.org/debian/ buster
 
 Package: python
 Architecture: any
